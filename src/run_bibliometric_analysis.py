@@ -13,10 +13,10 @@ GitHub : github.com/thieuanhvan/uit-bibliometric
 
 Usage:
     # Single institution profiling
-    python bibliometric_analysis.py --input scopus_uit.csv --output results/ --inst UIT
+    python run_bibliometric_analysis.py --input scopus_uit.csv --output results/ --inst UIT
 
     # Pilot comparison
-    python bibliometric_analysis.py \
+    python run_bibliometric_analysis.py \
         --input scopus_uit.csv \
         --compare scopus_hcmus.csv \
         --output results/ \

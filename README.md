@@ -1,11 +1,11 @@
-# Bibliometric Analysis of CS Research Trends at UIT VNU-HCM
+# Bibliometric Analysis of CS Research at UIT VNU-HCM (2010–2025)
 
-**Paper:** *A Bibliometric Analysis of Computer Science Research Trends at UIT VNU-HCM:
-A Multi-Dimensional Study with Institutional Comparison (2010–2025)*
+**Paper:** *A Bibliometric Analysis of Computer Science Research at the University of Information Technology, VNU-HCM: Trends, AI Alignment, and Institutional Benchmarking (2010–2025)*
 
-**Authors:** Thieu Anh Van · Cao Thi Nhan
-**Affiliation:** University of Information Technology (UIT), VNU-HCM
-**Venue:** MAPR 2026
+**Author:** Thiều Anh Vân  
+**Affiliation:** University of Information Technology (UIT), VNU-HCM, Vietnam  
+**Submitted to:** Scientometrics (Springer), April 2026  
+**ORCID:** 0009-0003-9637-0195
 
 ---
 
@@ -14,16 +14,18 @@ A Multi-Dimensional Study with Institutional Comparison (2010–2025)*
 ```
 uit-bibliometric/
 ├── src/
-│   └── bibliometric_analysis.py   # Main analysis pipeline (5 dimensions)
+│   ├── bibliometric_analysis.py   # Main analysis pipeline (5 dimensions + A(T))
+│   └── run_analysis.py            # Entry point — auto-detects CSV files
 ├── data/
-│   └── README.md                  # ← HOW TO DOWNLOAD THE DATASET
+│   └── (CSV files not included — see below)
+├── results/
+│   └── (output figures and tables)
 ├── requirements.txt
-├── .gitignore
 └── README.md
 ```
 
-> **⚠️ CSV files are not included.**
-> See [`data/README.md`](data/README.md) for Scopus query instructions.
+> **⚠️ CSV files are not included** (Scopus license does not permit redistribution).  
+> Follow the instructions below to reproduce the dataset.
 
 ---
 
@@ -37,92 +39,75 @@ cd uit-bibliometric
 pip install -r requirements.txt
 ```
 
-### 2. Download data
+### 2. Download data from Scopus
 
-Follow the instructions in [`data/README.md`](data/README.md) to export
-the Scopus CSV files and place them in the `data/` folder:
+Go to [https://www.scopus.com](https://www.scopus.com) → **Search → Advanced Search**.
 
-```
-data/
-├── scopus_uit.csv      # AF-ID(60283218), SUBJAREA=COMP, 2010-2025
-└── scopus_hcmus.csv    # AF-ID(60071419), all fields, 2010-2025
-```
+Use these queries and export **all results as CSV (all fields)**:
+
+| File to save as | Scopus query |
+|----------------|-------------|
+| `data/scopus_60283218_20260408.csv` | `AF-ID(60283218) AND LIMIT-TO(SUBJAREA,"COMP") AND PUBYEAR AFT 2009 AND PUBYEAR BEF 2026` |
+| `data/scopus_60071419_20260408.csv` | `AF-ID(60071419) AND LIMIT-TO(SUBJAREA,"COMP") AND PUBYEAR AFT 2009 AND PUBYEAR BEF 2026` |
+| `data/scopus_60272237_20260408.csv` | `AF-ID(60272237) AND LIMIT-TO(SUBJAREA,"COMP") AND PUBYEAR AFT 2009 AND PUBYEAR BEF 2026` |
+
+> **Note:** Record counts may differ slightly from the paper (1,703 / 1,944 / 2,114)  
+> due to ongoing Scopus indexing. The archived snapshot date was **8 April 2026**.
 
 ### 3. Run
 
 ```bash
-# UIT profiling only
-python src/bibliometric_analysis.py \
-    --input data/scopus_uit.csv \
-    --output results/ \
-    --inst UIT
-
-# UIT + HCMUS comparison
-python src/bibliometric_analysis.py \
-    --input data/scopus_uit.csv \
-    --compare data/scopus_hcmus.csv \
-    --output results/ \
-    --inst UIT --inst2 HCMUS
+cd src
+python run_analysis.py
 ```
 
-Output figures are saved to `results/`.
+Output figures will be saved to `results/`.
 
 ---
 
-## Five analytical dimensions
+## File naming convention
 
-| Dimension | Description |
-|-----------|-------------|
-| (i) Publication trend | Annual output, CAGR |
-| (ii) Thematic evolution | 6 rule-based clusters + NMF validation (k=6) |
-| (iii) Citation impact | Volume × mean-citation quadrant |
-| (iv) Global AI alignment | A(T) score vs 15 representative trends |
-| (v) Co-authorship network | Betweenness centrality, hub detection |
+The pipeline detects CSV files by **Affiliation ID** in the filename:
+
+```
+scopus_[AffiliationID]_[yyyyMMdd].csv
+```
+
+| Filename example | Affiliation ID | Institution |
+|-----------------|---------------|-------------|
+| `scopus_60283218_20260408.csv` | 60283218 | UIT (primary) |
+| `scopus_60071419_20260408.csv` | 60071419 | HCMUS-CS |
+| `scopus_60272237_20260408.csv` | 60272237 | HCMUT-CS |
+
+If a file is not found or has the wrong name format, the script prints  
+the correct Scopus query and exits with a clear error message.
 
 ---
 
-## Key results
-
-- Annual output tripled post-2020 (95 → 296 papers/year)
-- AI/ML share: 8.2% → 40.6% (CAGR = 44.8%/year)
-- Global AI alignment: A(T) = 12/15 = 0.80 (approximate indicator)
-- NMF recovers 5/6 clusters independently (agreement 34.1% vs random 16.7%)
-- UIT vs HCMUS-CS: 1.7× citation gap largely associated with journal ratio
-
----
-
-## Requirements
+## Dependencies
 
 ```
-pandas>=1.5
-matplotlib>=3.6
-numpy>=1.23
-networkx>=2.8
-scikit-learn>=1.1
-scipy>=1.9
+pandas >= 1.5.0
+matplotlib >= 3.5.0
+numpy >= 1.21.0
+networkx >= 2.8
+scikit-learn >= 1.0   # for NMF topic modeling
 ```
-
-Install: `pip install -r requirements.txt`
 
 ---
 
 ## Citation
 
-```bibtex
-@inproceedings{van2026bibliometric,
-  title     = {A Bibliometric Analysis of Computer Science Research Trends
-               at UIT VNU-HCM: A Multi-Dimensional Study with
-               Institutional Comparison (2010--2025)},
-  author    = {Thieu, Anh Van and Cao, Thi Nhan},
-  booktitle = {Proceedings of the International Conference on
-               Machine Learning and Pattern Recognition (MAPR)},
-  year      = {2026}
-}
+If you use this code or data, please cite:
+
+```
+Van, T.A. (2026). A Bibliometric Analysis of Computer Science Research at the 
+University of Information Technology, VNU-HCM: Trends, AI Alignment, and 
+Institutional Benchmarking (2010–2025). Scientometrics (under review).
 ```
 
 ---
 
 ## License
 
-Code: MIT License.
-Data: Not included (see [`data/README.md`](data/README.md)).
+MIT License — free to use and adapt with attribution.

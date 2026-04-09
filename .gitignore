@@ -1,37 +1,21 @@
-# ── Scopus data (NOT committed — see README for download instructions) ────────
+# ── Scopus data files (not redistributable per Scopus license) ───────────────
+data/scopus-*.csv
 data/*.csv
-data/*.xlsx
-data/*.xls
 
-# ── Python ────────────────────────────────────────────────────────────────────
+# ── Python ───────────────────────────────────────────────────────────────────
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
-.Python
-env/
+.env
 venv/
 .venv/
-*.egg-info/
-dist/
-build/
 
-# ── Jupyter ───────────────────────────────────────────────────────────────────
-.ipynb_checkpoints/
-*.ipynb
+# ── Generated results (reproducible from pipeline) ───────────────────────────
+results/*.png
+results/*.jpg
+results/*.pdf
+results/*.csv
 
-# ── Output / results (regenerate by running pipeline) ────────────────────────
-results/
-*.png
-*.pdf
-*.docx
-
-# ── OS ────────────────────────────────────────────────────────────────────────
+# ── OS ───────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
-desktop.ini
-
-# ── IDE ───────────────────────────────────────────────────────────────────────
-.vscode/
-.idea/
-*.swp
-*.swo

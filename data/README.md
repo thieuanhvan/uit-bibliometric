@@ -1,66 +1,46 @@
-# Data Directory
+# Data
 
-The raw Scopus CSV files are **not included** in this repository
-(excluded by `.gitignore` per Scopus Terms of Service).
+CSV files are **not included** in this repository due to Scopus licensing  
+(see `.gitignore`). To reproduce the analysis, download from Scopus.
+
+## Naming convention (REQUIRED)
+
+```
+scopus-[AffiliationID]-[shortname]-[yyyyMMdd].csv
+```
+
+| File | Affiliation ID | Institution |
+|------|---------------|-------------|
+| `scopus-60283218-hcmuit-20260408.csv` | 60283218 | UIT (primary) |
+| `scopus-60071419-hcmuns-20260408.csv` | 60071419 | HCMUS-CS |
+| `scopus-60272237-hcmut-20260408.csv`  | 60272237 | HCMUT-CS |
+
+The date `20260408` = export date (8 April 2026). Use your actual download date.
 
 ---
 
-## How to reproduce the dataset
+## Scopus queries
 
-### Dataset 1 — UIT VNU-HCM (primary corpus)
+Go to [scopus.com](https://www.scopus.com) → **Search → Advanced Search**,  
+export **all results as CSV (all fields)**.
 
-1. Go to [Scopus](https://www.scopus.com) (institutional access required)
-2. Click **Search** → **Advanced Search**
-3. Paste the following query:
-
+**UIT — save as `scopus-60283218-hcmuit-[yyyyMMdd].csv`**
 ```
-AF-ID ( 60283218 ) AND SUBJAREA ( COMP ) AND PUBYEAR AFT 2009 AND PUBYEAR BEF 2026
+AF-ID(60283218) AND LIMIT-TO(SUBJAREA,"COMP") AND PUBYEAR AFT 2009 AND PUBYEAR BEF 2026
 ```
+Expected: ~1,703 records (as of 8 April 2026)
 
-4. **Select all** results → **Export** → **CSV** → select all fields
-5. Save as: `data/scopus_uit.csv`
-
-Expected result: ~2,046 records (before filtering errata/editorials)
-
----
-
-### Dataset 2 — HCMUS (comparison corpus)
-
-1. Go to [Scopus](https://www.scopus.com) → **Advanced Search**
-2. Paste:
-
+**HCMUS — save as `scopus-60071419-hcmuns-[yyyyMMdd].csv`**
 ```
-AF-ID ( 60071419 ) AND PUBYEAR AFT 2009 AND PUBYEAR BEF 2026
+AF-ID(60071419) AND LIMIT-TO(SUBJAREA,"COMP") AND PUBYEAR AFT 2009 AND PUBYEAR BEF 2026
 ```
+Expected: ~1,944 records (as of 8 April 2026)
 
-3. Export all fields → Save as: `data/scopus_hcmus.csv`
+**HCMUT — save as `scopus-60272237-hcmut-[yyyyMMdd].csv`**
+```
+AF-ID(60272237) AND LIMIT-TO(SUBJAREA,"COMP") AND PUBYEAR AFT 2009 AND PUBYEAR BEF 2026
+```
+Expected: ~2,114 records (as of 8 April 2026)
 
-Expected result: ~7,217 records (all subject areas; CS/IT filter applied in pipeline)
-
----
-
-## Field reference
-
-The analysis uses these Scopus CSV columns:
-
-| Column | Used for |
-|--------|---------|
-| `Title` | Keyword matching, NMF |
-| `Year` | Trend analysis |
-| `Author Keywords` | Cluster classification, NMF |
-| `Cited by` | Citation impact |
-| `Document Type` | Filtering (remove Erratum, Editorial) |
-| `Source title` | Venue analysis |
-| `Authors` | Co-authorship network |
-| `Author(s) ID` | Co-authorship network (unique IDs) |
-| `Affiliations` | International collaboration |
-
----
-
-## Notes
-
-- Data collected: **April 8, 2026**
-- Scopus coverage note: only Scopus-indexed publications are included;
-  non-indexed venues are excluded
-- Raw CSV files cannot be shared per Scopus Terms of Service;
-  results are fully reproducible by re-running the query above
+> **Note:** Record counts may differ slightly due to ongoing Scopus indexing.
+> The archived snapshot preserves the exact corpus used in the paper.
